@@ -1,1 +1,20 @@
+name: Market Signal Bot
+on:
+  schedule:
+    - cron: '*/10 * * * *' # हर 10 मिनट में चलेगा
+  workflow_dispatch:
 
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: Install Dependencies
+        run: pip install nsepython requests
+      - name: Run Script
+        run: python Bot.py
+        
