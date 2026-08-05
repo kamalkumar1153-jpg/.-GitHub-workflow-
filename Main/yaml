@@ -1,20 +1,28 @@
-name: Market Signal Bot
+name: Upstox Multi-Index Trading Bot
+
 on:
   schedule:
-    - cron: '*/10 * * * *' # हर 10 मिनट में चलेगा
-  workflow_dispatch:
+    # Runs every 5 minutes from Monday to Friday during market hours (9:15 AM to 3:30 PM IST)
+    # Note: GitHub cron runs in UTC time. 9:15 AM - 3:30 PM IST is roughly 03:45 - 10:00 UTC.
+    - cron: '*/5 3-10 * * 1-5'
+  workflow_dispatch: # Allows manual trigger from GitHub UI
 
 jobs:
   run-bot:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
-      - name: Install Dependencies
-        run: pip install nsepython requests
-      - name: Run Script
-        run: python Bot.py
+          python-version: '3.10'
+
+      - name: Run Trading Script
+        env:
+          UPSTOX_TOKEN: ${{ secrets.UPSTOX_TOKEN }}
+        run: |
+          python upstox_master.py
+
         
